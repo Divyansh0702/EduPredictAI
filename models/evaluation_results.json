@@ -1,0 +1,483 @@
+{
+  "metadata": {
+    "training_date": "2026-10-17 11:30:55",
+    "dataset_path": "D:\\Web Develpoment\\EduPredictAI\\data\\artificial_intelligence_students.csv",
+    "total_records": 395,
+    "train_samples": 316,
+    "test_samples": 79,
+    "test_split_ratio": 0.2,
+    "random_seed": 42,
+    "selection_criterion": "Highest Weighted F1-Score on held-out test set",
+    "winning_model": "Logistic Regression",
+    "target_classes": [
+      "Low (At-Risk)",
+      "Medium (Satisfactory)",
+      "High (Good)"
+    ],
+    "limitations": {
+      "dataset_bias": "The model is trained on Portuguese secondary school students (Cortez & Silva, 2008). Socio-demographic patterns may differ across distinct educational cultures.",
+      "sample_size": "The training corpus comprises 395 student records. Rare academic trajectories or edge cases may have limited representation.",
+      "feature_availability": "Prediction relies heavily on prior period grades (G1, G2), study habits, and absences. Omitting prior grades may reduce predictive power.",
+      "non_deterministic_human_factors": "Predictions are statistical approximations based on historical data. They must NOT be treated as deterministic guarantees of student potential or ability."
+    },
+    "dataset_summary": {
+      "total_records": 395,
+      "has_target": true,
+      "average_score": 10.415189873417722,
+      "min_score": 0.0,
+      "max_score": 20.0,
+      "target_distribution": {
+        "Low (At-Risk)": 130,
+        "Medium (Satisfactory)": 165,
+        "High (Good)": 100
+      },
+      "total_columns": 34,
+      "columns": [
+        "subject",
+        "school",
+        "sex",
+        "age",
+        "address",
+        "famsize",
+        "Pstatus",
+        "Medu",
+        "Fedu",
+        "Mjob",
+        "Fjob",
+        "reason",
+        "guardian",
+        "traveltime",
+        "studytime",
+        "failures",
+        "schoolsup",
+        "famsup",
+        "paid",
+        "activities",
+        "nursery",
+        "higher",
+        "internet",
+        "romantic",
+        "famrel",
+        "freetime",
+        "goout",
+        "Dalc",
+        "Walc",
+        "health",
+        "absences",
+        "G1",
+        "G2",
+        "G3"
+      ],
+      "missing_values_count": 0
+    }
+  },
+  "models": {
+    "Logistic Regression": {
+      "accuracy": 0.8734177215189873,
+      "precision_weighted": 0.8734177215189873,
+      "precision_macro": 0.8777000777000777,
+      "recall_weighted": 0.8734177215189873,
+      "recall_macro": 0.8777000777000777,
+      "f1_weighted": 0.8734177215189873,
+      "f1_macro": 0.8777000777000777,
+      "confusion_matrix": [
+        [
+          23,
+          3,
+          0
+        ],
+        [
+          3,
+          28,
+          2
+        ],
+        [
+          0,
+          2,
+          18
+        ]
+      ],
+      "class_names": [
+        "Low (At-Risk)",
+        "Medium (Satisfactory)",
+        "High (Good)"
+      ],
+      "classification_report": {
+        "Low (At-Risk)": {
+          "precision": 0.8846153846153846,
+          "recall": 0.8846153846153846,
+          "f1-score": 0.8846153846153846,
+          "support": 26.0
+        },
+        "Medium (Satisfactory)": {
+          "precision": 0.8484848484848485,
+          "recall": 0.8484848484848485,
+          "f1-score": 0.8484848484848485,
+          "support": 33.0
+        },
+        "High (Good)": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1-score": 0.9,
+          "support": 20.0
+        },
+        "accuracy": 0.8734177215189873,
+        "macro avg": {
+          "precision": 0.8777000777000777,
+          "recall": 0.8777000777000777,
+          "f1-score": 0.8777000777000777,
+          "support": 79.0
+        },
+        "weighted avg": {
+          "precision": 0.8734177215189873,
+          "recall": 0.8734177215189873,
+          "f1-score": 0.8734177215189873,
+          "support": 79.0
+        }
+      },
+      "actual_distribution": {
+        "Low (At-Risk)": 26,
+        "Medium (Satisfactory)": 33,
+        "High (Good)": 20
+      },
+      "predicted_distribution": {
+        "Low (At-Risk)": 26,
+        "Medium (Satisfactory)": 33,
+        "High (Good)": 20
+      },
+      "test_sample_size": 79
+    },
+    "Decision Tree": {
+      "accuracy": 0.8481012658227848,
+      "precision_weighted": 0.8570236058843653,
+      "precision_macro": 0.8745945945945945,
+      "recall_weighted": 0.8481012658227848,
+      "recall_macro": 0.8454933954933955,
+      "f1_weighted": 0.8497848130014921,
+      "f1_macro": 0.857006586418351,
+      "confusion_matrix": [
+        [
+          21,
+          5,
+          0
+        ],
+        [
+          4,
+          29,
+          0
+        ],
+        [
+          0,
+          3,
+          17
+        ]
+      ],
+      "class_names": [
+        "Low (At-Risk)",
+        "Medium (Satisfactory)",
+        "High (Good)"
+      ],
+      "classification_report": {
+        "Low (At-Risk)": {
+          "precision": 0.84,
+          "recall": 0.8076923076923077,
+          "f1-score": 0.8235294117647058,
+          "support": 26.0
+        },
+        "Medium (Satisfactory)": {
+          "precision": 0.7837837837837838,
+          "recall": 0.8787878787878788,
+          "f1-score": 0.8285714285714286,
+          "support": 33.0
+        },
+        "High (Good)": {
+          "precision": 1.0,
+          "recall": 0.85,
+          "f1-score": 0.918918918918919,
+          "support": 20.0
+        },
+        "accuracy": 0.8481012658227848,
+        "macro avg": {
+          "precision": 0.8745945945945945,
+          "recall": 0.8454933954933955,
+          "f1-score": 0.857006586418351,
+          "support": 79.0
+        },
+        "weighted avg": {
+          "precision": 0.8570236058843653,
+          "recall": 0.8481012658227848,
+          "f1-score": 0.8497848130014921,
+          "support": 79.0
+        }
+      },
+      "actual_distribution": {
+        "Low (At-Risk)": 26,
+        "Medium (Satisfactory)": 33,
+        "High (Good)": 20
+      },
+      "predicted_distribution": {
+        "Low (At-Risk)": 25,
+        "Medium (Satisfactory)": 37,
+        "High (Good)": 17
+      },
+      "test_sample_size": 79
+    },
+    "Random Forest": {
+      "accuracy": 0.8481012658227848,
+      "precision_weighted": 0.8570236058843653,
+      "precision_macro": 0.8745945945945945,
+      "recall_weighted": 0.8481012658227848,
+      "recall_macro": 0.8454933954933955,
+      "f1_weighted": 0.8497848130014921,
+      "f1_macro": 0.857006586418351,
+      "confusion_matrix": [
+        [
+          21,
+          5,
+          0
+        ],
+        [
+          4,
+          29,
+          0
+        ],
+        [
+          0,
+          3,
+          17
+        ]
+      ],
+      "class_names": [
+        "Low (At-Risk)",
+        "Medium (Satisfactory)",
+        "High (Good)"
+      ],
+      "classification_report": {
+        "Low (At-Risk)": {
+          "precision": 0.84,
+          "recall": 0.8076923076923077,
+          "f1-score": 0.8235294117647058,
+          "support": 26.0
+        },
+        "Medium (Satisfactory)": {
+          "precision": 0.7837837837837838,
+          "recall": 0.8787878787878788,
+          "f1-score": 0.8285714285714286,
+          "support": 33.0
+        },
+        "High (Good)": {
+          "precision": 1.0,
+          "recall": 0.85,
+          "f1-score": 0.918918918918919,
+          "support": 20.0
+        },
+        "accuracy": 0.8481012658227848,
+        "macro avg": {
+          "precision": 0.8745945945945945,
+          "recall": 0.8454933954933955,
+          "f1-score": 0.857006586418351,
+          "support": 79.0
+        },
+        "weighted avg": {
+          "precision": 0.8570236058843653,
+          "recall": 0.8481012658227848,
+          "f1-score": 0.8497848130014921,
+          "support": 79.0
+        }
+      },
+      "actual_distribution": {
+        "Low (At-Risk)": 26,
+        "Medium (Satisfactory)": 33,
+        "High (Good)": 20
+      },
+      "predicted_distribution": {
+        "Low (At-Risk)": 25,
+        "Medium (Satisfactory)": 37,
+        "High (Good)": 17
+      },
+      "test_sample_size": 79
+    }
+  },
+  "feature_importances": {
+    "Logistic Regression": {
+      "G2": 2.6150220435072304,
+      "G1": 1.3419120415126848,
+      "absences": 0.4488159700483747,
+      "Fjob_other": 0.4198523995591512,
+      "age": 0.4089943985805165,
+      "famrel": 0.3698078884554666,
+      "guardian_other": 0.3105372292252515,
+      "Fjob_teacher": 0.2821259628891237,
+      "Fjob_health": 0.27892759782729665,
+      "Fjob_services": 0.2746694476372363,
+      "reason_course": 0.2736396746470726,
+      "address_R": 0.2711046182427352,
+      "address_U": 0.2672442777770823,
+      "nursery_yes": 0.26398777585701205,
+      "nursery_no": 0.2601274353913597,
+      "Mjob_teacher": 0.24779559918823313,
+      "Walc": 0.2379321432236113,
+      "Dalc": 0.23405339972334072,
+      "Mjob_services": 0.2332828626449436,
+      "reason_reputation": 0.2262896135902603,
+      "Medu": 0.221114685601294,
+      "health": 0.21489802259561885,
+      "famsize_LE3": 0.19333059211544737,
+      "famsize_GT3": 0.18798583409435554,
+      "Fedu": 0.18649254565746595,
+      "guardian_mother": 0.18461227392583557,
+      "goout": 0.18214509044676805,
+      "Mjob_at_home": 0.17749845736701772,
+      "romantic_yes": 0.16879402203169355,
+      "romantic_no": 0.16344926401060192,
+      "Fjob_at_home": 0.15372607500483465,
+      "reason_home": 0.15076536245301886,
+      "traveltime": 0.14858123020889977,
+      "failures": 0.14491502454826735,
+      "reason_other": 0.13519610829950082,
+      "studytime": 0.125334648399139,
+      "Mjob_other": 0.12246759844649813,
+      "guardian_father": 0.1220646148337627,
+      "Pstatus_T": 0.1219132996324574,
+      "Pstatus_A": 0.11656854161136558,
+      "internet_no": 0.10101090818078558,
+      "internet_yes": 0.09952649062534642,
+      "sex_M": 0.09753121491053086,
+      "sex_F": 0.09604679735509186,
+      "paid_yes": 0.08835966586944342,
+      "schoolsup_yes": 0.08544054792075016,
+      "paid_no": 0.08301490784835162,
+      "famsup_no": 0.08235938262340052,
+      "schoolsup_no": 0.08009578989965836,
+      "famsup_yes": 0.07849904215774742,
+      "activities_yes": 0.07848531141867389,
+      "school_GP": 0.076383144337007,
+      "school_MS": 0.07489872678156752,
+      "activities_no": 0.07314055339758187,
+      "higher_no": 0.06399658814281507,
+      "higher_yes": 0.06013624767716235,
+      "Mjob_health": 0.045862880398321926,
+      "freetime": 0.040145688330194114
+    },
+    "Decision Tree": {
+      "G2": 0.8427206898997581,
+      "Walc": 0.02670188441597694,
+      "Mjob_at_home": 0.02047839833464898,
+      "age": 0.01843055850118408,
+      "reason_other": 0.01698668986284247,
+      "Fjob_other": 0.015018535065899959,
+      "absences": 0.014948063570224225,
+      "freetime": 0.012554148544284811,
+      "studytime": 0.01020479869581371,
+      "famsize_LE3": 0.00871825094029606,
+      "G1": 0.006902477684288506,
+      "paid_yes": 0.006335504484782026,
+      "Medu": 0.0,
+      "Fedu": 0.0,
+      "traveltime": 0.0,
+      "failures": 0.0,
+      "famrel": 0.0,
+      "goout": 0.0,
+      "Dalc": 0.0,
+      "health": 0.0,
+      "school_GP": 0.0,
+      "school_MS": 0.0,
+      "sex_F": 0.0,
+      "sex_M": 0.0,
+      "address_R": 0.0,
+      "address_U": 0.0,
+      "famsize_GT3": 0.0,
+      "Pstatus_A": 0.0,
+      "Pstatus_T": 0.0,
+      "Mjob_health": 0.0,
+      "Mjob_other": 0.0,
+      "Mjob_services": 0.0,
+      "Mjob_teacher": 0.0,
+      "Fjob_at_home": 0.0,
+      "Fjob_health": 0.0,
+      "Fjob_services": 0.0,
+      "Fjob_teacher": 0.0,
+      "reason_course": 0.0,
+      "reason_home": 0.0,
+      "reason_reputation": 0.0,
+      "guardian_father": 0.0,
+      "guardian_mother": 0.0,
+      "guardian_other": 0.0,
+      "schoolsup_no": 0.0,
+      "schoolsup_yes": 0.0,
+      "famsup_no": 0.0,
+      "famsup_yes": 0.0,
+      "paid_no": 0.0,
+      "activities_no": 0.0,
+      "activities_yes": 0.0,
+      "nursery_no": 0.0,
+      "nursery_yes": 0.0,
+      "higher_no": 0.0,
+      "higher_yes": 0.0,
+      "internet_no": 0.0,
+      "internet_yes": 0.0,
+      "romantic_no": 0.0,
+      "romantic_yes": 0.0
+    },
+    "Random Forest": {
+      "G2": 0.32273441382565704,
+      "G1": 0.21040373945294705,
+      "failures": 0.03763927787045958,
+      "absences": 0.0336794629257773,
+      "goout": 0.03141240363828225,
+      "age": 0.023022349522926908,
+      "health": 0.022124102106487773,
+      "Walc": 0.020154293425598557,
+      "Medu": 0.020140791923369372,
+      "studytime": 0.01410015918497955,
+      "Fedu": 0.013381358700602145,
+      "Dalc": 0.013217363335216002,
+      "schoolsup_no": 0.012354193623680515,
+      "freetime": 0.012193478870925844,
+      "famrel": 0.008652334007860054,
+      "schoolsup_yes": 0.008255099973238117,
+      "Fjob_teacher": 0.008109274680323358,
+      "traveltime": 0.008086123269231355,
+      "reason_reputation": 0.007599560852141645,
+      "sex_F": 0.0072903239428631405,
+      "famsize_LE3": 0.006845838167349194,
+      "reason_course": 0.0068073105441176455,
+      "sex_M": 0.006546868502802208,
+      "guardian_father": 0.006121746202844797,
+      "Mjob_at_home": 0.005696583013451985,
+      "address_R": 0.00569439880071824,
+      "romantic_yes": 0.005536740193823906,
+      "higher_no": 0.00544759651509733,
+      "Fjob_other": 0.005440227833722318,
+      "reason_other": 0.005406256313759172,
+      "famsup_yes": 0.005367238335435003,
+      "Fjob_services": 0.005266355075528427,
+      "higher_yes": 0.0049180848985853395,
+      "internet_no": 0.004866464874474217,
+      "Mjob_services": 0.004861758312527389,
+      "romantic_no": 0.004852148146234302,
+      "address_U": 0.004725517765178462,
+      "paid_yes": 0.004526438979561526,
+      "activities_yes": 0.0044713434719501005,
+      "Mjob_teacher": 0.004463240290643529,
+      "internet_yes": 0.004454345936113391,
+      "guardian_mother": 0.004359683786744114,
+      "Mjob_other": 0.004252748876467638,
+      "paid_no": 0.003967303311574171,
+      "Mjob_health": 0.0038720476597815467,
+      "famsize_GT3": 0.003746662173025285,
+      "nursery_yes": 0.0036332056987169663,
+      "famsup_no": 0.003630021364630859,
+      "nursery_no": 0.003300756118732951,
+      "activities_no": 0.0031085774745681343,
+      "Pstatus_T": 0.002941710060150086,
+      "school_GP": 0.002885269008844994,
+      "reason_home": 0.002746727183255642,
+      "guardian_other": 0.0027399006186936857,
+      "Fjob_at_home": 0.0026917189217161176,
+      "school_MS": 0.002498281002098187,
+      "Pstatus_A": 0.0020279589827172898,
+      "Fjob_health": 0.0007308204517963469
+    }
+  }
+}

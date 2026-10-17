@@ -1,0 +1,5 @@
+"""
+EduPredict AI - Core Machine Learning and Data Processing Package
+"""
+__version__ = "1.0.0"
+
