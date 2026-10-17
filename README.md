@@ -289,27 +289,7 @@ To guarantee zero target leakage, $G3$ is removed completely from input features
 
 ---
 
-## 13. Deployment
-
-EduPredict AI can be deployed on any standard platform:
-- **Streamlit Community Cloud**:
-  1. Push this repository to GitHub.
-  2. Connect repository to [share.streamlit.io](https://share.streamlit.io).
-  3. Specify `app.py` as the main entry file.
-- **Docker**:
-  ```dockerfile
-  FROM python:3.11-slim
-  WORKDIR /app
-  COPY requirements.txt .
-  RUN pip install --no-cache-dir -r requirements.txt
-  COPY . .
-  EXPOSE 8501
-  CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-  ```
-
----
-
-## 14. License & Attribution
+## 13. License & Attribution
 
 - **Dataset**: UCI Machine Learning Repository (Cortez & Silva, 2008).
 - **Project**: EduPredict AI — Created for Machine Learning and Applied AI Internship Evaluation.
