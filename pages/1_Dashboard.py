@@ -22,11 +22,14 @@ from src.data_loader import (
     categorize_grade,
     load_dataset,
 )
+from src.predict import is_model_trained, load_evaluation_results
 from src.ui_components import (
     apply_custom_css,
+    apply_plotly_styling,
     render_disclaimer,
     render_header,
     render_metric_card,
+    render_sidebar_brand,
 )
 
 st.set_page_config(
@@ -37,13 +40,29 @@ st.set_page_config(
 
 apply_custom_css()
 
+# Model status check for sidebar
+model_available = is_model_trained()
+winning_model = "Logistic Regression"
+test_acc_str = "87.3%"
+if model_available:
+    try:
+        eval_payload = load_evaluation_results()
+        winning_model = eval_payload["metadata"]["winning_model"]
+        acc = eval_payload["models"][winning_model]["accuracy"] * 100
+        test_acc_str = f"{acc:.1f}%"
+    except Exception:
+        pass
+
+render_sidebar_brand(model_ready=model_available, winning_model=winning_model, accuracy_str=test_acc_str)
+
 render_header(
-    title="Student Performance & Demographic Dashboard",
+    title="Student Performance & Demographic Analytics",
     subtitle=(
         "Explore student cohort statistics, study habits, grade trajectories, and factors "
-        "influencing academic outcomes in the secondary school curriculum."
+        "influencing academic outcomes in the curriculum."
     ),
     icon="📈",
+    badge="Module 1: Exploratory Cohort Intelligence"
 )
 
 # Sidebar: Dataset selection & filters
@@ -51,8 +70,8 @@ st.sidebar.markdown("### 🗂️ Subject Selection")
 dataset_choice = st.sidebar.radio(
     "Select Course Subject:",
     options=[
-        "1. Artificial Intelligence (student-ai.csv)",
-        "2. Cloud Computing (student-cc.csv)",
+        "1. Artificial Intelligence",
+        "2. Cloud Computing",
         "Upload Custom CSV"
     ],
     index=0,
@@ -81,7 +100,7 @@ else:
             st.sidebar.error(f"Failed to parse file: {e}")
             df = load_dataset(DEFAULT_DATA_PATH)
     else:
-        st.sidebar.info("Using default Math dataset until a file is uploaded.")
+        st.sidebar.info("Using default Artificial Intelligence dataset until a file is uploaded.")
         df = load_dataset(DEFAULT_DATA_PATH)
 
 # Add performance category column if G3 exists
@@ -96,22 +115,22 @@ total_students = len(df)
 avg_g3 = float(df["G3"].mean()) if has_g3 else 0.0
 median_absences = float(df["absences"].median()) if "absences" in df.columns else 0.0
 
-pass_count = int((df["G3"] >= 10).sum()) if has_g3 else 0
+pass_count = int((df["G3"] >= 15).sum()) if has_g3 else 0
 pass_pct = (pass_count / total_students) * 100 if total_students > 0 else 0.0
 
-good_count = int((df["G3"] >= 14).sum()) if has_g3 else 0
+good_count = int((df["G3"] >= 21).sum()) if has_g3 else 0
 good_pct = (good_count / total_students) * 100 if total_students > 0 else 0.0
 
 with col1:
-    render_metric_card("Enrolled Students", f"{total_students:,}", "Active Student Cohort")
+    render_metric_card("Enrolled Students", f"{total_students:,}", "Active Student Cohort", icon="👥", accent_color="#3b82f6")
 with col2:
-    render_metric_card("Mean End Semester Exam", f"{avg_g3:.2f} / 20" if has_g3 else "N/A", "Scale: 0 to 20")
+    render_metric_card("Mean End Semester Exam", f"{avg_g3:.2f} / 30" if has_g3 else "N/A", "Scale: 0 to 30", icon="📊", accent_color="#8b5cf6")
 with col3:
-    render_metric_card("Passing Rate (>=10)", f"{pass_pct:.1f}%", f"{pass_count} Passed")
+    render_metric_card("Passing Rate (>=15)", f"{pass_pct:.1f}%", f"{pass_count} Passed", icon="🎯", accent_color="#10b981")
 with col4:
-    render_metric_card("High Standing (>=14)", f"{good_pct:.1f}%", f"{good_count} Honors")
+    render_metric_card("High Standing (>=21)", f"{good_pct:.1f}%", f"{good_count} Honors", icon="⭐", accent_color="#f59e0b")
 with col5:
-    render_metric_card("Median Absences", f"{median_absences:.0f} days", "Course attendance")
+    render_metric_card("Median Absences", f"{median_absences:.0f} days", "Course attendance", icon="📅", accent_color="#06b6d4")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -148,9 +167,10 @@ with tab1:
                 points="outliers",
                 color_discrete_sequence=["#3b82f6", "#8b5cf6", "#10b981"],
                 title="Progression: ST - 1, ST - 2 & End Semester Exam",
-                labels={"Score": "Exam Score (0 - 20)", "Assessment": "Examination"}
+                labels={"Score": "Exam Score (0 - 30)", "Assessment": "Examination"}
             )
-            fig_box.update_layout(height=380, showlegend=False)
+            apply_plotly_styling(fig_box, height=390)
+            fig_box.update_layout(showlegend=False)
             st.plotly_chart(fig_box, use_container_width=True)
 
     with g_col2:
@@ -158,7 +178,7 @@ with tab1:
             fig_hist = px.histogram(
                 df,
                 x="G3",
-                nbins=21,
+                nbins=31,
                 color="Performance_Category",
                 color_discrete_map={
                     "Low (At-Risk)": "#ef4444",
@@ -166,11 +186,11 @@ with tab1:
                     "High (Good)": "#10b981",
                 },
                 title="End Semester Exam Score Histogram with Performance Tiers",
-                labels={"G3": "End Semester Exam Score (0 - 20)"}
+                labels={"G3": "End Semester Exam Score (0 - 30)"}
             )
-            fig_hist.add_vline(x=10, line_dash="dash", line_color="#ef4444", annotation_text="Passing Threshold (10)")
-            fig_hist.add_vline(x=14, line_dash="dash", line_color="#10b981", annotation_text="High Standing (14)")
-            fig_hist.update_layout(height=380)
+            fig_hist.add_vline(x=15, line_dash="dash", line_color="#ef4444", annotation_text="Passing Threshold (15)")
+            fig_hist.add_vline(x=21, line_dash="dash", line_color="#10b981", annotation_text="High Standing (21)")
+            apply_plotly_styling(fig_hist, height=390)
             st.plotly_chart(fig_hist, use_container_width=True)
 
 with tab2:
@@ -189,9 +209,10 @@ with tab2:
                 color="Study_Time_Label",
                 category_orders={"Study_Time_Label": ["< 2 hrs/wk", "2 - 5 hrs/wk", "5 - 10 hrs/wk", "> 10 hrs/wk"]},
                 title="Impact of Weekly Study Time on End Semester Exam Score",
-                labels={"G3": "End Semester Exam Score (0 - 20)"}
+                labels={"G3": "End Semester Exam Score (0 - 30)"}
             )
-            fig_study.update_layout(height=380, showlegend=False)
+            apply_plotly_styling(fig_study, height=380)
+            fig_study.update_layout(showlegend=False)
             st.plotly_chart(fig_study, use_container_width=True)
 
     with s_col2:
@@ -203,9 +224,10 @@ with tab2:
                 y="G3",
                 color="Failures_Label",
                 title="Impact of Past Course Failures on End Semester Exam",
-                labels={"G3": "End Semester Exam Score (0 - 20)"}
+                labels={"G3": "End Semester Exam Score (0 - 30)"}
             )
-            fig_fail.update_layout(height=380, showlegend=False)
+            apply_plotly_styling(fig_fail, height=380)
+            fig_fail.update_layout(showlegend=False)
             st.plotly_chart(fig_fail, use_container_width=True)
 
     if "absences" in df.columns and has_g3:
@@ -220,9 +242,9 @@ with tab2:
                 "High (Good)": "#10b981",
             },
             title="Course Absences vs. End Semester Exam Score",
-            labels={"absences": "Number of Course Absences", "G3": "End Semester Exam Score (0 - 20)"},
+            labels={"absences": "Number of Course Absences", "G3": "End Semester Exam Score (0 - 30)"},
         )
-        fig_abs.update_layout(height=360)
+        apply_plotly_styling(fig_abs, height=360)
         st.plotly_chart(fig_abs, use_container_width=True)
 
 with tab3:
@@ -240,9 +262,9 @@ with tab3:
                 barmode="overlay",
                 marginal="box",
                 title="Aspiration for Higher Education vs. End Semester Exam",
-                labels={"G3": "End Semester Exam Score (0 - 20)"}
+                labels={"G3": "End Semester Exam Score (0 - 30)"}
             )
-            fig_higher.update_layout(height=380)
+            apply_plotly_styling(fig_higher, height=380)
             st.plotly_chart(fig_higher, use_container_width=True)
 
     with d_col2:
@@ -257,10 +279,11 @@ with tab3:
                 text="mean",
                 color="Support_Group",
                 title="Mean End Semester Exam Score by Support Structure",
-                labels={"mean": "Average End Semester Exam Score"},
+                labels={"mean": "Average End Semester Exam Score (0 - 30)"},
             )
             fig_supp.update_traces(texttemplate="%{text:.2f}", textposition="outside")
-            fig_supp.update_layout(height=380, showlegend=False)
+            apply_plotly_styling(fig_supp, height=380)
+            fig_supp.update_layout(showlegend=False)
             st.plotly_chart(fig_supp, use_container_width=True)
 
 with tab4:

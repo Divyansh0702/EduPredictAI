@@ -31,21 +31,21 @@ from src.preprocessing import (
 
 
 def test_categorize_grade_thresholds():
-    """Verify exact Portuguese grading thresholds."""
-    # Low / At-Risk: < 10
+    """Verify exact 0-30 grading thresholds."""
+    # Low / At-Risk: < 15
     assert categorize_grade(0) == "Low (At-Risk)"
     assert categorize_grade(5) == "Low (At-Risk)"
-    assert categorize_grade(9.9) == "Low (At-Risk)"
+    assert categorize_grade(14.9) == "Low (At-Risk)"
 
-    # Medium / Satisfactory: 10 <= x <= 13
-    assert categorize_grade(10) == "Medium (Satisfactory)"
-    assert categorize_grade(12) == "Medium (Satisfactory)"
-    assert categorize_grade(13) == "Medium (Satisfactory)"
+    # Medium / Satisfactory: 15 <= x <= 20
+    assert categorize_grade(15) == "Medium (Satisfactory)"
+    assert categorize_grade(18) == "Medium (Satisfactory)"
+    assert categorize_grade(20) == "Medium (Satisfactory)"
 
-    # High / Good: >= 14
-    assert categorize_grade(14) == "High (Good)"
-    assert categorize_grade(18) == "High (Good)"
-    assert categorize_grade(20) == "High (Good)"
+    # High / Good: >= 21
+    assert categorize_grade(21) == "High (Good)"
+    assert categorize_grade(26) == "High (Good)"
+    assert categorize_grade(30) == "High (Good)"
 
 
 def test_detect_delimiter():

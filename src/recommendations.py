@@ -39,33 +39,33 @@ def generate_academic_recommendations(
             g1_val = float(g1)
             g2_val = float(g2)
 
-            if g1_val < 10 or g2_val < 10:
+            if g1_val < 15 or g2_val < 15:
                 urgent_actions.append({
-                    "indicator": "Low Mid-Term Assessment Scores (Below Passing Threshold of 10/20)",
+                    "indicator": "Low Mid-Term Assessment Scores (Below Passing Threshold of 15/30)",
                     "title": "Immediate Targeted Remediation for End Semester Exam",
                     "suggestion": (
-                        f"Prior assessment scores (Mid-Term 1={g1_val}, Mid-Term 2={g2_val}) fall below the standard passing score. "
+                        f"Prior assessment scores (Mid-Term 1={g1_val}/30, Mid-Term 2={g2_val}/30) fall below the standard passing score (15/30). "
                         "Schedule weekly review sessions focusing on fundamental prerequisite concepts and conduct "
                         "practice problem sets before the End Semester Exam."
                     ),
                     "action_tag": "Academic Intervention"
                 })
-            elif g2_val < g1_val - 2:
+            elif g2_val < g1_val - 3:
                 recommended_actions.append({
                     "indicator": "Declining Performance Trajectory (Mid-Term 2 < Mid-Term 1)",
                     "title": "Identify Recent Concept Roadblocks",
                     "suggestion": (
-                        f"Performance dropped from Mid-Term 1 ({g1_val}) to Mid-Term 2 ({g2_val}). Meet with the course instructor "
+                        f"Performance dropped from Mid-Term 1 ({g1_val}/30) to Mid-Term 2 ({g2_val}/30). Meet with the course instructor "
                         "to pinpoint difficult intermediate topics before they affect the End Semester Exam."
                     ),
                     "action_tag": "Grade Trend Alert"
                 })
-            elif g2_val >= 14 and g1_val >= 14:
+            elif g2_val >= 21 and g1_val >= 21:
                 positive_notes.append({
                     "indicator": "Strong Academic Consistency",
                     "title": "Honors & Advanced Topic Exploration",
                     "suggestion": (
-                        f"Consistent high performance across initial assessments (Mid-Term 1={g1_val}, Mid-Term 2={g2_val}). "
+                        f"Consistent high performance across initial assessments (Mid-Term 1={g1_val}/30, Mid-Term 2={g2_val}/30). "
                         "Student is well-positioned for an excellent grade in the End Semester Exam."
                     )
                 })

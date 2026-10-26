@@ -57,8 +57,8 @@ SYNTHETIC_AT_RISK_STUDENT = {
     "Walc": 4,
     "health": 3,
     "absences": 14,    # High absences
-    "G1": 6,          # Failing grade
-    "G2": 7,          # Failing grade
+    "G1": 9,          # Failing grade (< 15 on 0-30 scale)
+    "G2": 10,         # Failing grade (< 15 on 0-30 scale)
 }
 
 # Synthetic test fixture simulating a high-performing student record
@@ -93,8 +93,8 @@ SYNTHETIC_HIGH_PERFORMING_STUDENT = {
     "Walc": 1,
     "health": 5,
     "absences": 2,
-    "G1": 17,
-    "G2": 18,
+    "G1": 26,         # High grade (>= 21 on 0-30 scale)
+    "G2": 27,         # High grade (>= 21 on 0-30 scale)
 }
 
 

@@ -25,9 +25,9 @@ The dataset contains student attributes:
 - **Academic & School Support**: `traveltime`, `studytime`, `failures`, `schoolsup`, `famsup`, `paid`, `activities`, `nursery`, `higher`, `internet`, `romantic`
 - **Social & Health**: `famrel`, `freetime`, `goout`, `Dalc`, `Walc`, `health`, `absences`
 - **Academic Assessments**:
-  - `G1`: Mid-Term 1 / Sessional Test 1 score (numeric: 0 to 20 or scaled 0 to 30).
-  - `G2`: Mid-Term 2 / Sessional Test 2 score (numeric: 0 to 20 or scaled 0 to 30).
-  - `G3`: **End Semester Exam** score (numeric: 0 to 20, target variable).
+  - `G1`: Mid-Term 1 / Sessional Test 1 score (numeric: 0 to 30).
+  - `G2`: Mid-Term 2 / Sessional Test 2 score (numeric: 0 to 30).
+  - `G3`: **End Semester Exam** score (numeric: 0 to 30, target variable).
 
 ## 5. Target Variable Definition & Leakage Prevention
 To prevent **target leakage**:
@@ -35,12 +35,12 @@ To prevent **target leakage**:
 2. The raw `G3` column is strictly removed from feature matrix `X` before training and testing.
 3. Only historical features and continuous internal assessments (`G1`, `G2`) are made available to the model.
 
-### Educational Grading Thresholds (0 - 20 Scale)
+### Educational Grading Thresholds (0 - 30 Scale)
 | End Semester Exam (G3) | Performance Category | Educational Interpretation | Recommended Support Level |
 |---|---|---|---|
-| **0 to 9** | **Low (At-Risk)** | Below minimum passing standard | Immediate targeted remediation & tutoring |
-| **10 to 13** | **Medium (Satisfactory)** | Standard passing grade; meets baseline goals | Habit optimization & active recall |
-| **14 to 20** | **High (Good)** | Above-average to distinction pace | Advanced projects & academic leadership |
+| **0 to 14** | **Low (At-Risk)** | Below minimum passing standard (< 15 / 30) | Immediate targeted remediation & tutoring |
+| **15 to 20** | **Medium (Satisfactory)** | Standard passing grade; meets baseline goals (15 - 20 / 30) | Habit optimization & active recall |
+| **21 to 30** | **High (Good)** | Above-average to distinction pace (>= 21 / 30) | Advanced projects & academic leadership |
 
 ## 6. Manual Dataset Setup Instructions
 If offline or downloading manually:

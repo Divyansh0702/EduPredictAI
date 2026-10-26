@@ -25,9 +25,11 @@ from src.predict import is_model_trained, load_evaluation_results
 from src.train_model import train_and_evaluate_all
 from src.ui_components import (
     apply_custom_css,
+    apply_plotly_styling,
     render_disclaimer,
     render_header,
     render_metric_card,
+    render_sidebar_brand,
 )
 
 # Streamlit Page Config
@@ -40,50 +42,59 @@ st.set_page_config(
 
 apply_custom_css()
 
-# Sidebar Navigation and System Status
-st.sidebar.markdown("## 🎓 EduPredict AI")
-st.sidebar.caption("Machine Learning & Applied AI Internship Project")
-st.sidebar.markdown("---")
-
-# Check model status
+# Load model evaluation results if available
+eval_summary = {}
+best_model_name = "Not Trained"
+best_acc = 0.0
+best_f1 = 0.0
 model_available = is_model_trained()
+
 if model_available:
-    st.sidebar.success("✅ Models Trained & Ready")
     try:
-        eval_data = load_evaluation_results()
-        winning_model = eval_data["metadata"]["winning_model"]
-        st.sidebar.info(f"🏆 Active Model: **{winning_model}**")
+        eval_payload = load_evaluation_results()
+        best_model_name = eval_payload["metadata"]["winning_model"]
+        best_metrics = eval_payload["models"][best_model_name]
+        best_acc = best_metrics["accuracy"] * 100
+        best_f1 = best_metrics["f1_weighted"]
     except Exception:
         pass
-else:
+
+# Sidebar Navigation and System Status
+render_sidebar_brand(
+    model_ready=model_available,
+    winning_model=best_model_name if model_available else "Pending",
+    accuracy_str=f"{best_acc:.1f}%" if model_available else "N/A"
+)
+
+if not model_available:
     st.sidebar.warning("⚠️ Model Artifacts Missing")
     if st.sidebar.button("🚀 Train Models Now", use_container_width=True):
-        with st.spinner("Training ML pipelines on UCI dataset..."):
+        with st.spinner("Training ML pipelines on dataset..."):
             train_and_evaluate_all()
             st.rerun()
 
-st.sidebar.markdown("---")
 st.sidebar.markdown("### 📌 Navigation")
 st.sidebar.markdown(
     """
-    - **Home Overview** (Current)
-    - [1_Dashboard](Dashboard)
-    - [2_Predict_Performance](Predict_Performance)
-    - [3_Model_Analytics](Model_Analytics)
-    - [4_Bulk_Prediction](Bulk_Prediction)
+    - **🏠 Home Overview** (Current)
+    - [📈 1. Performance Dashboard](Dashboard)
+    - [🔮 2. Predict Performance](Predict_Performance)
+    - [🧠 3. Model Analytics](Model_Analytics)
+    - [📂 4. Bulk CSV Scoring](Bulk_Prediction)
     """
 )
 st.sidebar.markdown("---")
-st.sidebar.caption("Dataset: UCI Student Performance (Cortez & Silva, 2008)")
+st.sidebar.caption("Datasets: Artificial Intelligence & Cloud Computing Cohorts")
 
 # Main Header
 render_header(
-    title="EduPredict AI — Student Performance Prediction System",
+    title="EduPredict AI — Academic Performance Prediction System",
     subtitle=(
-        "An end-to-end Applied Machine Learning application that forecasts student academic performance tiers "
+        "An end-to-end Applied Machine Learning platform that forecasts student academic performance tiers "
         "and proactively identifies learners requiring targeted academic intervention and support."
     ),
     icon="🎓",
+    badge="Applied Machine Learning & AI Internship"
 )
 
 # Load dataset metadata for summary dashboard
@@ -99,38 +110,26 @@ except Exception as e:
         "missing_values_count": 0,
     }
 
-# Load model evaluation results if available
-eval_summary = {}
-best_model_name = "Not Trained"
-best_acc = 0.0
-best_f1 = 0.0
-
-if model_available:
-    try:
-        eval_payload = load_evaluation_results()
-        best_model_name = eval_payload["metadata"]["winning_model"]
-        best_metrics = eval_payload["models"][best_model_name]
-        best_acc = best_metrics["accuracy"] * 100
-        best_f1 = best_metrics["f1_weighted"]
-    except Exception:
-        pass
-
 # Top Key Performance Indicators
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     render_metric_card(
-        title="Student Records Analyzed",
+        title="Student Cohort Size",
         value=f"{meta['total_records']:,}",
-        subtitle="Academic Cohort (AI & Cloud Computing)",
+        subtitle="Evaluated Course Roster",
+        icon="👥",
+        accent_color="#3b82f6"
     )
 
 with col2:
-    avg_score_str = f"{meta['average_score']:.1f} / 20" if meta["average_score"] else "N/A"
+    avg_score_str = f"{meta['average_score']:.1f} / 30" if meta["average_score"] else "N/A"
     render_metric_card(
-        title="Average End Semester Exam",
+        title="Mean End Semester Exam",
         value=avg_score_str,
-        subtitle="End Semester Exam Mean Distribution",
+        subtitle="Overall Average Score (0 - 30)",
+        icon="📊",
+        accent_color="#8b5cf6"
     )
 
 with col3:
@@ -140,18 +139,22 @@ with col3:
         else "N/A"
     )
     render_metric_card(
-        title="Overall Passing Rate",
+        title="Cohort Passing Rate",
         value=pass_pct,
-        subtitle="Students passing End Semester Exam (>= 10 / 20)",
+        subtitle="Scoring >= 15 / 30 Passing Mark",
+        icon="🎯",
+        accent_color="#10b981"
     )
 
 with col4:
     acc_display = f"{best_acc:.1f}%" if model_available else "Pending"
-    sub_text = f"Top Model: {best_model_name}" if model_available else "Run training script"
+    sub_text = f"Champion: {best_model_name}" if model_available else "Run training script"
     render_metric_card(
-        title="Test Accuracy (Winning Model)",
+        title="Model Test Accuracy",
         value=acc_display,
         subtitle=sub_text,
+        icon="🏆",
+        accent_color="#f59e0b"
     )
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -181,18 +184,21 @@ with chart_col:
             values="Students",
             color="Category",
             color_discrete_map=colors_map,
-            hole=0.45,
+            hole=0.52,
         )
         fig.update_traces(
             textposition="inside",
             textinfo="percent+label",
-            marker=dict(line=dict(color="#ffffff", width=2)),
+            marker=dict(line=dict(color="#ffffff", width=2.5)),
+            hovertemplate="<b>%{label}</b><br>Students: %{value}<br>Share: %{percent}<extra></extra>"
         )
         fig.update_layout(
+            annotations=[dict(text=f"<b>{meta['total_records']}</b><br>Students", x=0.5, y=0.5, font_size=16, showarrow=False)],
             margin=dict(t=20, b=20, l=20, r=20),
             height=340,
             showlegend=True,
-            legend=dict(orientation="h", yanchor="bottom", y=-0.15, xanchor="center", x=0.5),
+            legend=dict(orientation="h", yanchor="bottom", y=-0.12, xanchor="center", x=0.5),
+            paper_bgcolor="rgba(0,0,0,0)",
         )
         st.plotly_chart(fig, use_container_width=True)
     else:
@@ -202,12 +208,17 @@ with info_col:
     st.markdown("### 🎯 Core Objectives & Applied AI Workflow")
     st.markdown(
         """
-        - **Proactive At-Risk Detection**: Identifies students prone to academic failure early, enabling timely educational guidance.
-        - **Model Comparison**: Rigorously evaluates **Logistic Regression**, **Decision Tree**, and **Random Forest** algorithms on held-out test data.
-        - **Strict Target Leakage Elimination**: Fully separates the End Semester Exam target ($G3$) from predictive features.
-        - **Transparent Actionable Suggestions**: Delivers prioritized, rule-based academic support recommendations without opaque black-box claims.
-        - **Enterprise Deployment**: Complete Streamlit application with single inference, bulk batch scoring, and downloadable CSV audit trails.
-        """
+        <div class="glass-container" style="padding: 18px 22px;">
+            <div style="font-size: 0.92rem; color: #334155; line-height: 1.65;">
+                <p>• <strong>Proactive Early Warning:</strong> Identifies at-risk students before final exams using sessional indicators (ST-1, ST-2).</p>
+                <p>• <strong>Comparative Algorithm Benchmarking:</strong> Rigorously tests <strong>Logistic Regression</strong>, <strong>Decision Trees</strong>, and <strong>Random Forests</strong> on held-out test data.</p>
+                <p>• <strong>Zero Target Leakage:</strong> Strictly excludes the End Semester Exam grade ($G3$) from predictive features during training.</p>
+                <p>• <strong>Transparent Counseling Heuristics:</strong> Generates tailored, rule-based academic support recommendations.</p>
+                <p>• <strong>Batch Processing Engine:</strong> Automated CSV roster scoring with instant cohort risk breakdown and exportable reports.</p>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
     if not model_available:
         st.warning("⚠️ Models have not been trained yet. Click below to initialize:")
@@ -220,17 +231,18 @@ with info_col:
 st.markdown("<br>", unsafe_allow_html=True)
 
 # Quick Navigation Section
-st.markdown("### 🚀 Application Modules")
+st.markdown("### 🚀 Interactive Application Modules")
 nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
 with nav_col1:
     st.markdown(
         """
-        <div class="metric-card" style="height: 190px;">
+        <div class="metric-card" style="height: 195px;">
+            <div class="metric-card-accent" style="background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
             <div class="metric-title">Module 1</div>
             <div style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">📈 Performance Dashboard</div>
-            <div style="font-size: 0.85rem; color: #64748b; line-height: 1.4;">
-                Deep-dive exploratory data analysis, correlation studies, and demographic visualizations.
+            <div style="font-size: 0.84rem; color: #64748b; line-height: 1.45;">
+                Exploratory data analysis, score distributions across Mid-Terms, and study habit correlations.
             </div>
         </div>
         """,
@@ -240,11 +252,12 @@ with nav_col1:
 with nav_col2:
     st.markdown(
         """
-        <div class="metric-card" style="height: 190px;">
+        <div class="metric-card" style="height: 195px;">
+            <div class="metric-card-accent" style="background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
             <div class="metric-title">Module 2</div>
-            <div style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">🔮 Single Prediction</div>
-            <div style="font-size: 0.85rem; color: #64748b; line-height: 1.4;">
-                Interactive student profile assessment, risk probability distribution, and intervention suggestions.
+            <div style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">🔮 Predict Performance</div>
+            <div style="font-size: 0.84rem; color: #64748b; line-height: 1.45;">
+                Live student evaluation form, End Semester forecast badge, probability chart, and intervention guide.
             </div>
         </div>
         """,
@@ -254,11 +267,12 @@ with nav_col2:
 with nav_col3:
     st.markdown(
         """
-        <div class="metric-card" style="height: 190px;">
+        <div class="metric-card" style="height: 195px;">
+            <div class="metric-card-accent" style="background: linear-gradient(90deg, #10b981, #34d399);"></div>
             <div class="metric-title">Module 3</div>
             <div style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">🧠 Model Analytics</div>
-            <div style="font-size: 0.85rem; color: #64748b; line-height: 1.4;">
-                Comparative evaluation metrics, confusion matrix heatmaps, and feature importance rankings.
+            <div style="font-size: 0.84rem; color: #64748b; line-height: 1.45;">
+                Algorithm leaderboards, test accuracy, multi-metric bar charts, confusion matrices, and feature ranking.
             </div>
         </div>
         """,
@@ -268,11 +282,12 @@ with nav_col3:
 with nav_col4:
     st.markdown(
         """
-        <div class="metric-card" style="height: 190px;">
+        <div class="metric-card" style="height: 195px;">
+            <div class="metric-card-accent" style="background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
             <div class="metric-title">Module 4</div>
             <div style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 6px;">📂 Bulk CSV Scoring</div>
-            <div style="font-size: 0.85rem; color: #64748b; line-height: 1.4;">
-                Batch student roster upload, schema validation, cohort risk summary, and CSV export.
+            <div style="font-size: 0.84rem; color: #64748b; line-height: 1.45;">
+                Batch student roster upload, schema validation, downloadable templates, and enriched CSV export.
             </div>
         </div>
         """,

@@ -228,7 +228,7 @@ pytest tests/ -v
 
 All 11 unit tests verify:
 - Delimiter detection (`,` and `;`).
-- Grade threshold mapping (`0-9` $\rightarrow$ Low, `10-13` $\rightarrow$ Medium, `14-20` $\rightarrow$ High).
+- Grade threshold mapping (`0-14` $\rightarrow$ Low, `15-20` $\rightarrow$ Medium, `21-30` $\rightarrow$ High).
 - Target leakage elimination ($G3$ dropped from $X$).
 - Pipeline transformation consistency.
 - Input validation and missing column rejection.
@@ -257,12 +257,12 @@ Network URL: http://<your-ip>:8501
 ## 11. Model Evaluation Methodology
 
 ### Target Definition & Leakage Prevention
-In Portuguese secondary education, student grades range from $0$ to $20$, with $10$ serving as the official passing boundary. We convert the final grade ($G3$) into 3 categories:
-- **Low (At-Risk)**: $G3 < 10$
-- **Medium (Satisfactory)**: $10 \le G3 \le 13$
-- **High (Good)**: $14 \le G3 \le 20$
+Student grades are evaluated on a **0 to 30 scale** (e.g., Sessional Tests and End Semester Exam), with **15** serving as the official passing boundary (50%). We convert the final grade (**End Semester Exam** / $G3$) into 3 performance categories:
+- **Low (At-Risk)**: $\text{End Semester Exam} < 15$
+- **Medium (Satisfactory)**: $15 \le \text{End Semester Exam} \le 20$
+- **High (Good)**: $21 \le \text{End Semester Exam} \le 30$
 
-To guarantee zero target leakage, $G3$ is removed completely from input features.
+To guarantee zero target leakage, the End Semester Exam ($G3$) is removed completely from input features.
 
 ### Train/Test Split
 - **Test Size**: 20% held-out test data (79 unseen student records).

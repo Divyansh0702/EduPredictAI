@@ -24,14 +24,16 @@ from src.data_loader import (
     detect_delimiter,
     load_dataset,
 )
-from src.predict import is_model_trained, load_best_pipeline, predict_bulk
+from src.predict import is_model_trained, load_best_pipeline, load_evaluation_results, predict_bulk
 from src.preprocessing import ALL_FEATURE_COLUMNS, validate_input_features
 from src.train_model import train_and_evaluate_all
 from src.ui_components import (
     apply_custom_css,
+    apply_plotly_styling,
     render_disclaimer,
     render_header,
     render_metric_card,
+    render_sidebar_brand,
 )
 
 st.set_page_config(
@@ -42,13 +44,29 @@ st.set_page_config(
 
 apply_custom_css()
 
+# Model status check for sidebar
+model_available = is_model_trained()
+winning_model = "Logistic Regression"
+test_acc_str = "87.3%"
+if model_available:
+    try:
+        eval_payload = load_evaluation_results()
+        winning_model = eval_payload["metadata"]["winning_model"]
+        acc = eval_payload["models"][winning_model]["accuracy"] * 100
+        test_acc_str = f"{acc:.1f}%"
+    except Exception:
+        pass
+
+render_sidebar_brand(model_ready=model_available, winning_model=winning_model, accuracy_str=test_acc_str)
+
 render_header(
-    title="Bulk Student Cohort Prediction & Risk Scoring",
+    title="Bulk Student Cohort Prediction & Auditing",
     subtitle=(
         "Upload a student roster CSV to generate batch performance predictions, identify at-risk clusters, "
         "and download enriched results with confidence probabilities."
     ),
     icon="📂",
+    badge="Module 4: Batch Inference & Risk Scoring"
 )
 
 # Model check
@@ -90,7 +108,7 @@ inst_col1, inst_col2 = st.columns([1.1, 0.9])
 with inst_col1:
     st.markdown(
         """
-        Your CSV file should contain student attributes (study habits, mid-term assessment scores `G1`, `G2`, absences, etc.).
+        Your CSV file should contain student attributes (study habits, sessional test scores `G1`, `G2` on a 0 - 30 scale, absences, etc.).
         - Delimiters supported: Comma (`,`) or Semicolon (`;`).
         - The `subject` column is optional and will be preserved in output.
         - You can download pre-populated templates for **Artificial Intelligence** or **Cloud Computing** below:
@@ -161,22 +179,24 @@ if uploaded_file is not None:
             kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
             with kpi1:
-                render_metric_card("Total Scored", f"{summary['total_records']:,}", "Valid records evaluated")
+                render_metric_card("Total Scored", f"{summary['total_records']:,}", "Valid records evaluated", icon="👥", accent_color="#3b82f6")
 
             with kpi2:
                 render_metric_card(
                     "At-Risk Students",
                     f"{summary['at_risk_count']:,}",
                     f"{summary['at_risk_percentage']}% of cohort",
+                    icon="🚨",
+                    accent_color="#ef4444"
                 )
 
             with kpi3:
                 sat_count = summary["category_distribution"].get("Medium (Satisfactory)", 0)
-                render_metric_card("Satisfactory Standing", f"{sat_count:,}", "Meeting baseline")
+                render_metric_card("Satisfactory Standing", f"{sat_count:,}", "Meeting baseline pace", icon="🎯", accent_color="#f59e0b")
 
             with kpi4:
                 good_count = summary["category_distribution"].get("High (Good)", 0)
-                render_metric_card("High Standing", f"{good_count:,}", "Strong academic pace")
+                render_metric_card("High Standing", f"{good_count:,}", "Honors pace (>=21/30)", icon="⭐", accent_color="#10b981")
 
             # Cohort distribution visualization
             st.markdown("<br>", unsafe_allow_html=True)
@@ -197,10 +217,16 @@ if uploaded_file is not None:
                         "Medium (Satisfactory)": "#f59e0b",
                         "High (Good)": "#10b981",
                     },
-                    hole=0.4,
+                    hole=0.48,
                     title="Predicted Cohort Risk Distribution",
                 )
-                fig_pie.update_layout(height=320, margin=dict(l=10, r=10, t=30, b=10))
+                fig_pie.update_traces(
+                    textposition="inside",
+                    textinfo="percent+label",
+                    marker=dict(line=dict(color="#ffffff", width=2)),
+                )
+                apply_plotly_styling(fig_pie, height=320)
+                fig_pie.update_layout(margin=dict(l=10, r=10, t=30, b=10))
                 st.plotly_chart(fig_pie, use_container_width=True)
 
             with ch_col2:

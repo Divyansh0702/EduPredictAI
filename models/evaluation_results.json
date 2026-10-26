@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "training_date": "2026-10-17 11:30:55",
+    "training_date": "2026-10-17 11:51:19",
     "dataset_path": "D:\\Web Develpoment\\EduPredictAI\\data\\artificial_intelligence_students.csv",
     "total_records": 395,
     "train_samples": 316,
@@ -23,9 +23,9 @@
     "dataset_summary": {
       "total_records": 395,
       "has_target": true,
-      "average_score": 10.415189873417722,
+      "average_score": 15.594936708860759,
       "min_score": 0.0,
-      "max_score": 20.0,
+      "max_score": 30.0,
       "target_distribution": {
         "Low (At-Risk)": 130,
         "Medium (Satisfactory)": 165,
@@ -74,12 +74,12 @@
   "models": {
     "Logistic Regression": {
       "accuracy": 0.8734177215189873,
-      "precision_weighted": 0.8734177215189873,
-      "precision_macro": 0.8777000777000777,
+      "precision_weighted": 0.8736033260328891,
+      "precision_macro": 0.8730731633957441,
       "recall_weighted": 0.8734177215189873,
-      "recall_macro": 0.8777000777000777,
-      "f1_weighted": 0.8734177215189873,
-      "f1_macro": 0.8777000777000777,
+      "recall_macro": 0.8842657342657342,
+      "f1_weighted": 0.8726454189270646,
+      "f1_macro": 0.8777090964590964,
       "confusion_matrix": [
         [
           23,
@@ -88,13 +88,13 @@
         ],
         [
           3,
-          28,
-          2
+          27,
+          3
         ],
         [
           0,
-          2,
-          18
+          1,
+          19
         ]
       ],
       "class_names": [
@@ -110,28 +110,28 @@
           "support": 26.0
         },
         "Medium (Satisfactory)": {
-          "precision": 0.8484848484848485,
-          "recall": 0.8484848484848485,
-          "f1-score": 0.8484848484848485,
+          "precision": 0.8709677419354839,
+          "recall": 0.8181818181818182,
+          "f1-score": 0.84375,
           "support": 33.0
         },
         "High (Good)": {
-          "precision": 0.9,
-          "recall": 0.9,
-          "f1-score": 0.9,
+          "precision": 0.8636363636363636,
+          "recall": 0.95,
+          "f1-score": 0.9047619047619048,
           "support": 20.0
         },
         "accuracy": 0.8734177215189873,
         "macro avg": {
-          "precision": 0.8777000777000777,
-          "recall": 0.8777000777000777,
-          "f1-score": 0.8777000777000777,
+          "precision": 0.8730731633957441,
+          "recall": 0.8842657342657342,
+          "f1-score": 0.8777090964590964,
           "support": 79.0
         },
         "weighted avg": {
-          "precision": 0.8734177215189873,
+          "precision": 0.8736033260328891,
           "recall": 0.8734177215189873,
-          "f1-score": 0.8734177215189873,
+          "f1-score": 0.8726454189270646,
           "support": 79.0
         }
       },
@@ -142,8 +142,8 @@
       },
       "predicted_distribution": {
         "Low (At-Risk)": 26,
-        "Medium (Satisfactory)": 33,
-        "High (Good)": 20
+        "Medium (Satisfactory)": 31,
+        "High (Good)": 22
       },
       "test_sample_size": 79
     },
@@ -223,13 +223,13 @@
       "test_sample_size": 79
     },
     "Random Forest": {
-      "accuracy": 0.8481012658227848,
-      "precision_weighted": 0.8570236058843653,
-      "precision_macro": 0.8745945945945945,
-      "recall_weighted": 0.8481012658227848,
-      "recall_macro": 0.8454933954933955,
-      "f1_weighted": 0.8497848130014921,
-      "f1_macro": 0.857006586418351,
+      "accuracy": 0.8354430379746836,
+      "precision_weighted": 0.8404500703234881,
+      "precision_macro": 0.8540740740740741,
+      "recall_weighted": 0.8354430379746836,
+      "recall_macro": 0.8353923853923854,
+      "f1_weighted": 0.8365710157422759,
+      "f1_macro": 0.8432868189228399,
       "confusion_matrix": [
         [
           21,
@@ -238,8 +238,8 @@
         ],
         [
           4,
-          29,
-          0
+          28,
+          1
         ],
         [
           0,
@@ -260,28 +260,28 @@
           "support": 26.0
         },
         "Medium (Satisfactory)": {
-          "precision": 0.7837837837837838,
-          "recall": 0.8787878787878788,
-          "f1-score": 0.8285714285714286,
+          "precision": 0.7777777777777778,
+          "recall": 0.8484848484848485,
+          "f1-score": 0.8115942028985508,
           "support": 33.0
         },
         "High (Good)": {
-          "precision": 1.0,
+          "precision": 0.9444444444444444,
           "recall": 0.85,
-          "f1-score": 0.918918918918919,
+          "f1-score": 0.8947368421052632,
           "support": 20.0
         },
-        "accuracy": 0.8481012658227848,
+        "accuracy": 0.8354430379746836,
         "macro avg": {
-          "precision": 0.8745945945945945,
-          "recall": 0.8454933954933955,
-          "f1-score": 0.857006586418351,
+          "precision": 0.8540740740740741,
+          "recall": 0.8353923853923854,
+          "f1-score": 0.8432868189228399,
           "support": 79.0
         },
         "weighted avg": {
-          "precision": 0.8570236058843653,
-          "recall": 0.8481012658227848,
-          "f1-score": 0.8497848130014921,
+          "precision": 0.8404500703234881,
+          "recall": 0.8354430379746836,
+          "f1-score": 0.8365710157422759,
           "support": 79.0
         }
       },
@@ -292,72 +292,72 @@
       },
       "predicted_distribution": {
         "Low (At-Risk)": 25,
-        "Medium (Satisfactory)": 37,
-        "High (Good)": 17
+        "Medium (Satisfactory)": 36,
+        "High (Good)": 18
       },
       "test_sample_size": 79
     }
   },
   "feature_importances": {
     "Logistic Regression": {
-      "G2": 2.6150220435072304,
-      "G1": 1.3419120415126848,
-      "absences": 0.4488159700483747,
-      "Fjob_other": 0.4198523995591512,
-      "age": 0.4089943985805165,
-      "famrel": 0.3698078884554666,
-      "guardian_other": 0.3105372292252515,
-      "Fjob_teacher": 0.2821259628891237,
-      "Fjob_health": 0.27892759782729665,
-      "Fjob_services": 0.2746694476372363,
-      "reason_course": 0.2736396746470726,
-      "address_R": 0.2711046182427352,
-      "address_U": 0.2672442777770823,
-      "nursery_yes": 0.26398777585701205,
-      "nursery_no": 0.2601274353913597,
-      "Mjob_teacher": 0.24779559918823313,
-      "Walc": 0.2379321432236113,
-      "Dalc": 0.23405339972334072,
-      "Mjob_services": 0.2332828626449436,
-      "reason_reputation": 0.2262896135902603,
-      "Medu": 0.221114685601294,
-      "health": 0.21489802259561885,
-      "famsize_LE3": 0.19333059211544737,
-      "famsize_GT3": 0.18798583409435554,
-      "Fedu": 0.18649254565746595,
-      "guardian_mother": 0.18461227392583557,
-      "goout": 0.18214509044676805,
-      "Mjob_at_home": 0.17749845736701772,
-      "romantic_yes": 0.16879402203169355,
-      "romantic_no": 0.16344926401060192,
-      "Fjob_at_home": 0.15372607500483465,
-      "reason_home": 0.15076536245301886,
-      "traveltime": 0.14858123020889977,
-      "failures": 0.14491502454826735,
-      "reason_other": 0.13519610829950082,
-      "studytime": 0.125334648399139,
-      "Mjob_other": 0.12246759844649813,
-      "guardian_father": 0.1220646148337627,
-      "Pstatus_T": 0.1219132996324574,
-      "Pstatus_A": 0.11656854161136558,
-      "internet_no": 0.10101090818078558,
-      "internet_yes": 0.09952649062534642,
-      "sex_M": 0.09753121491053086,
-      "sex_F": 0.09604679735509186,
-      "paid_yes": 0.08835966586944342,
-      "schoolsup_yes": 0.08544054792075016,
-      "paid_no": 0.08301490784835162,
-      "famsup_no": 0.08235938262340052,
-      "schoolsup_no": 0.08009578989965836,
-      "famsup_yes": 0.07849904215774742,
-      "activities_yes": 0.07848531141867389,
-      "school_GP": 0.076383144337007,
-      "school_MS": 0.07489872678156752,
-      "activities_no": 0.07314055339758187,
-      "higher_no": 0.06399658814281507,
-      "higher_yes": 0.06013624767716235,
-      "Mjob_health": 0.045862880398321926,
-      "freetime": 0.040145688330194114
+      "G2": 2.5830772255710475,
+      "G1": 1.3689400971610997,
+      "absences": 0.47123405529213014,
+      "Fjob_other": 0.43008124732631003,
+      "age": 0.4000360625708679,
+      "famrel": 0.3273714324801181,
+      "Fjob_health": 0.3072449170072478,
+      "guardian_other": 0.3050906796494344,
+      "Fjob_teacher": 0.2949938236787374,
+      "Dalc": 0.2833966268167363,
+      "Mjob_teacher": 0.2791344787837922,
+      "reason_course": 0.2690440733353507,
+      "nursery_yes": 0.26815901373363976,
+      "address_R": 0.26800142702031843,
+      "nursery_no": 0.2650147162549881,
+      "address_U": 0.26485712954166607,
+      "Fjob_services": 0.2582129023244119,
+      "Mjob_services": 0.24421680510298205,
+      "health": 0.2365825687557543,
+      "Medu": 0.23241952670012847,
+      "Walc": 0.2080478564309092,
+      "reason_reputation": 0.20797929358741882,
+      "Fedu": 0.20623633229452654,
+      "goout": 0.18435677434469064,
+      "famsize_LE3": 0.1842894650402731,
+      "romantic_yes": 0.1806482510422208,
+      "famsize_GT3": 0.1787504593710034,
+      "Mjob_at_home": 0.1778748993226141,
+      "romantic_no": 0.17510924537295078,
+      "guardian_mother": 0.16564068274916174,
+      "Fjob_at_home": 0.1651562573426572,
+      "reason_other": 0.1641390279064535,
+      "traveltime": 0.150382968700335,
+      "guardian_father": 0.13630569942162093,
+      "failures": 0.13565965079989042,
+      "Pstatus_T": 0.13071114453306235,
+      "Pstatus_A": 0.12517213886379228,
+      "studytime": 0.12468157932750557,
+      "reason_home": 0.11049277855640471,
+      "sex_M": 0.10961352530414692,
+      "sex_F": 0.10721881711352893,
+      "internet_no": 0.10567156253213332,
+      "internet_yes": 0.10327685434151457,
+      "activities_yes": 0.09780251376674472,
+      "activities_no": 0.09226350809747451,
+      "Mjob_other": 0.09114305380706696,
+      "paid_yes": 0.08599641653313607,
+      "schoolsup_yes": 0.08336164334354769,
+      "paid_no": 0.08259598418169979,
+      "famsup_no": 0.08252584089728353,
+      "school_GP": 0.0818369283921926,
+      "school_MS": 0.0794422202015735,
+      "famsup_yes": 0.07938154341863188,
+      "schoolsup_no": 0.07782263767427694,
+      "Mjob_health": 0.05735317750400718,
+      "higher_no": 0.05728183431087982,
+      "higher_yes": 0.05413753683222731,
+      "freetime": 0.033753207138245804
     },
     "Decision Tree": {
       "G2": 0.8427206898997581,

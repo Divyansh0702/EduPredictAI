@@ -22,9 +22,11 @@ from src.predict import is_model_trained, load_evaluation_results
 from src.train_model import train_and_evaluate_all
 from src.ui_components import (
     apply_custom_css,
+    apply_plotly_styling,
     render_disclaimer,
     render_header,
     render_metric_card,
+    render_sidebar_brand,
 )
 
 st.set_page_config(
@@ -35,18 +37,11 @@ st.set_page_config(
 
 apply_custom_css()
 
-render_header(
-    title="Machine Learning Model Analytics & Benchmarks",
-    subtitle=(
-        "Rigorous comparative evaluation of Logistic Regression, Decision Tree, and Random Forest "
-        "classifiers on held-out test data. Inspect accuracy, F1-scores, confusion matrices, and feature importances."
-    ),
-    icon="🧠",
-)
-
+# Load evaluation results
 if not is_model_trained():
+    render_sidebar_brand(model_ready=False)
     st.warning("⚠️ No evaluated model artifacts found on disk.")
-    st.info("Click the button below to train and benchmark all 3 classifiers on the UCI dataset:")
+    st.info("Click the button below to train and benchmark all 3 classifiers on the dataset:")
     if st.button("🚀 Train & Benchmark Models", key="train_analytics"):
         with st.spinner("Training and evaluating models..."):
             train_and_evaluate_all()
@@ -54,15 +49,27 @@ if not is_model_trained():
             st.rerun()
     st.stop()
 
-# Load evaluation results
 try:
     eval_payload = load_evaluation_results()
     metadata = eval_payload["metadata"]
     models_dict = eval_payload["models"]
     feature_importances = eval_payload.get("feature_importances", {})
+    winning_model = metadata["winning_model"]
+    winning_acc = models_dict[winning_model]["accuracy"] * 100
+    render_sidebar_brand(model_ready=True, winning_model=winning_model, accuracy_str=f"{winning_acc:.1f}%")
 except Exception as e:
     st.error(f"Failed to load evaluation results: {e}")
     st.stop()
+
+render_header(
+    title="Machine Learning Model Benchmarks & Analytics",
+    subtitle=(
+        "Rigorous comparative evaluation of Logistic Regression, Decision Tree, and Random Forest "
+        "classifiers on held-out test data. Inspect accuracy, F1-scores, confusion matrices, and feature importances."
+    ),
+    icon="🧠",
+    badge="Module 3: Algorithm Benchmarks & Verification"
+)
 
 # Methodology Alert Banner
 st.markdown(
@@ -71,7 +78,7 @@ st.markdown(
         <span style="font-weight: 700; color: #166534; font-size: 1rem;">📋 Evaluation Protocol & Methodology:</span>
         <div style="font-size: 0.88rem; color: #15803d; margin-top: 4px;">
             • <strong>Split:</strong> 80% Training ({metadata['train_samples']} samples) / 20% Held-Out Testing ({metadata['test_samples']} samples), Stratified.<br>
-            • <strong>Target:</strong> 3-Tier Classification of End Semester Exam (Low &lt; 10, Medium 10–13, High &ge; 14). Strict isolation: End Semester Exam (G3) removed from features.<br>
+            • <strong>Target:</strong> 3-Tier Classification of End Semester Exam (Low &lt; 15, Medium 15–20, High &ge; 21 on a 0–30 scale). Strict isolation: End Semester Exam (G3) removed from features.<br>
             • <strong>Reproducibility:</strong> Fixed Random Seed = {metadata['random_seed']}.<br>
             • <strong>Selection Metric:</strong> {metadata['selection_criterion']} &rarr; <strong>Winning Model: {metadata['winning_model']}</strong>
         </div>
@@ -128,11 +135,8 @@ fig_comp = px.bar(
     labels={"Score_Pct": "Score (%)"},
 )
 fig_comp.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
-fig_comp.update_layout(
-    yaxis=dict(range=[0, 110]),
-    height=400,
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-)
+apply_plotly_styling(fig_comp, height=400)
+fig_comp.update_layout(yaxis=dict(range=[0, 110]))
 st.plotly_chart(fig_comp, use_container_width=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -160,7 +164,7 @@ with cm_col1:
         color_continuous_scale="Blues",
         title=f"Confusion Matrix: {selected_model_name} (Test Set)",
     )
-    fig_cm.update_layout(height=360)
+    apply_plotly_styling(fig_cm, height=360)
     st.plotly_chart(fig_cm, use_container_width=True)
 
 with cm_col2:
@@ -177,12 +181,8 @@ with cm_col2:
         go.Bar(name="Actual (Ground Truth)", x=breakdown_df["Category"], y=breakdown_df["Actual (Ground Truth)"], marker_color="#94a3b8"),
         go.Bar(name="Predicted by Model", x=breakdown_df["Category"], y=breakdown_df["Predicted by Model"], marker_color="#3b82f6"),
     ])
-    fig_breakdown.update_layout(
-        barmode="group",
-        height=360,
-        title="Class Volume: Actual vs. Predicted on Test Set",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    )
+    apply_plotly_styling(fig_breakdown, height=360)
+    fig_breakdown.update_layout(barmode="group", title="Class Volume: Actual vs. Predicted on Test Set")
     st.plotly_chart(fig_breakdown, use_container_width=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -217,7 +217,8 @@ if feat_model_choice in feature_importances:
         title=f"Top 15 Most Influential Features — {feat_model_choice}",
     )
     fig_imp.update_traces(texttemplate="%{text:.3f}", textposition="outside")
-    fig_imp.update_layout(height=450, showlegend=False)
+    apply_plotly_styling(fig_imp, height=450)
+    fig_imp.update_layout(showlegend=False)
     st.plotly_chart(fig_imp, use_container_width=True)
 
     st.info(

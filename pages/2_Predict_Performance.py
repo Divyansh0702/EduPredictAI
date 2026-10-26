@@ -15,14 +15,16 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from src.predict import is_model_trained, load_best_pipeline, predict_single
+from src.predict import is_model_trained, load_best_pipeline, load_evaluation_results, predict_single
 from src.preprocessing import FEATURE_METADATA
 from src.recommendations import generate_academic_recommendations
 from src.train_model import train_and_evaluate_all
 from src.ui_components import (
     apply_custom_css,
+    apply_plotly_styling,
     render_disclaimer,
     render_header,
+    render_sidebar_brand,
 )
 
 st.set_page_config(
@@ -33,13 +35,29 @@ st.set_page_config(
 
 apply_custom_css()
 
+# Model status check for sidebar
+model_available = is_model_trained()
+winning_model = "Logistic Regression"
+test_acc_str = "87.3%"
+if model_available:
+    try:
+        eval_payload = load_evaluation_results()
+        winning_model = eval_payload["metadata"]["winning_model"]
+        acc = eval_payload["models"][winning_model]["accuracy"] * 100
+        test_acc_str = f"{acc:.1f}%"
+    except Exception:
+        pass
+
+render_sidebar_brand(model_ready=model_available, winning_model=winning_model, accuracy_str=test_acc_str)
+
 render_header(
-    title="Individual Student Performance Prediction",
+    title="Individual Student Performance Forecast",
     subtitle=(
-        "Enter student academic history, study habits, and demographic indicators to generate "
-        "an estimated performance tier and actionable educational support recommendations."
+        "Enter student sessional marks (ST-1, ST-2), study habits, and attendance to forecast "
+        "their End Semester Exam outcome and unlock tailored academic intervention plans."
     ),
     icon="🔮",
+    badge="Module 2: Real-Time Inference Engine"
 )
 
 # Model Availability Check
@@ -77,17 +95,17 @@ preset_choice = st.selectbox(
 defaults = {}
 if "Profile A" in preset_choice:
     defaults = {
-        "studytime": 1, "failures": 2, "G1": 6, "G2": 7, "ST1": 9, "ST2": 10, "absences": 14,
+        "studytime": 1, "failures": 2, "G1": 9, "G2": 10, "ST1": 9, "ST2": 10, "absences": 14,
         "schoolsup": "no", "famsup": "no", "age": 18
     }
 elif "Profile B" in preset_choice:
     defaults = {
-        "studytime": 2, "failures": 0, "G1": 11, "G2": 11, "ST1": 17, "ST2": 17, "absences": 4,
+        "studytime": 2, "failures": 0, "G1": 17, "G2": 17, "ST1": 17, "ST2": 17, "absences": 4,
         "schoolsup": "no", "famsup": "yes", "age": 18
     }
 elif "Profile C" in preset_choice:
     defaults = {
-        "studytime": 4, "failures": 0, "G1": 17, "G2": 18, "ST1": 26, "ST2": 27, "absences": 2,
+        "studytime": 4, "failures": 0, "G1": 26, "G2": 27, "ST1": 26, "ST2": 27, "absences": 2,
         "schoolsup": "no", "famsup": "yes", "age": 17
     }
 
@@ -220,13 +238,13 @@ with st.form("student_prediction_form"):
 if submitted:
     # Build complete student input payload
     student_payload = {
-        # Core inputs (scaling 0-30 sessional test scores to 0-20 model benchmark)
+        # Core inputs (0-30 sessional test scores matching model training scale)
         "age": int(age_val),
         "studytime": int(studytime_val),
         "failures": int(failures_val),
         "absences": int(absences_val),
-        "G1": int(round(g1_val * 20.0 / 30.0)) if g1_val > 20 else int(g1_val),
-        "G2": int(round(g2_val * 20.0 / 30.0)) if g2_val > 20 else int(g2_val),
+        "G1": int(g1_val),
+        "G2": int(g2_val),
         "schoolsup": schoolsup_val,
         "famsup": famsup_val,
 
@@ -283,14 +301,15 @@ if submitted:
                 f"""
                 <div class="metric-card" style="border-top: 5px solid {result['risk_color']};">
                     <div class="metric-title">{subject_val} — End Semester Exam Forecast</div>
-                    <div style="font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-top: 8px;">
+                    <div style="font-size: 1.85rem; font-weight: 800; color: #0f172a; margin-top: 10px;">
                         <span class="{badge_class}">{prediction}</span>
                     </div>
-                    <div style="margin-top: 14px; font-size: 0.95rem; font-weight: 600; color: #334155;">
-                        Status: <span style="color: {result['risk_color']};">{risk_level}</span>
+                    <div style="margin-top: 16px; font-size: 0.95rem; font-weight: 600; color: #334155; display: flex; align-items: center; justify-content: space-between;">
+                        <span>Status: <strong style="color: {result['risk_color']};">{risk_level}</strong></span>
+                        <span>Confidence: <strong>{confidence * 100:.1f}%</strong></span>
                     </div>
-                    <div style="margin-top: 6px; font-size: 0.85rem; color: #64748b;">
-                        Model Confidence: <strong>{confidence * 100:.1f}%</strong>
+                    <div style="background-color: #f1f5f9; border-radius: 9999px; height: 8px; width: 100%; margin-top: 8px; overflow: hidden;">
+                        <div style="background-color: {result['risk_color']}; width: {confidence * 100:.1f}%; height: 100%; border-radius: 9999px;"></div>
                     </div>
                 </div>
                 """,
@@ -318,9 +337,9 @@ if submitted:
                     },
                 )
                 fig_prob.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
+                apply_plotly_styling(fig_prob, height=210)
                 fig_prob.update_layout(
-                    height=200,
-                    margin=dict(l=10, r=40, t=10, b=10),
+                    margin=dict(l=10, r=45, t=10, b=10),
                     xaxis=dict(range=[0, 115], title="Probability (%)"),
                     yaxis=dict(title=""),
                     showlegend=False,

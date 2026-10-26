@@ -20,16 +20,16 @@ FALLBACK_SECONDARY_DATA_PATH = os.path.join(DATA_DIR, "student-por.csv")
 TARGET_RAW_COL = "G3"
 TARGET_CATEGORY_COL = "performance_category"
 
-# Categorization Thresholds for End Semester Exam (G3) (0 - 20 scale):
-# - Low (At-Risk): End Semester Exam < 10 (Failing grade; requires academic intervention)
-# - Medium (Satisfactory): 10 <= End Semester Exam <= 13 (Standard passing grade)
-# - High (Good): 14 <= End Semester Exam <= 20 (Above-average to excellent standing)
+# Categorization Thresholds for End Semester Exam (G3) (0 - 30 scale):
+# - Low (At-Risk): End Semester Exam < 15 (Failing grade; requires academic intervention)
+# - Medium (Satisfactory): 15 <= End Semester Exam <= 20 (Standard passing grade)
+# - High (Good): 21 <= End Semester Exam <= 30 (Above-average to excellent standing)
 THRESHOLDS = {
-    "low_max": 9,        # 0 to 9 -> Low
-    "medium_min": 10,    # 10 to 13 -> Medium
-    "medium_max": 13,
-    "high_min": 14,      # 14 to 20 -> High
-    "high_max": 20
+    "low_max": 14,       # 0 to 14 -> Low
+    "medium_min": 15,   # 15 to 20 -> Medium
+    "medium_max": 20,
+    "high_min": 21,     # 21 to 30 -> High
+    "high_max": 30
 }
 
 CLASS_NAMES = ["Low (At-Risk)", "Medium (Satisfactory)", "High (Good)"]
@@ -125,7 +125,7 @@ def load_dataset(
 
 def categorize_grade(grade: Union[int, float]) -> str:
     """
-    Map numerical G3 grade (0 - 20) to educational performance category.
+    Map numerical End Semester Exam grade (0 - 30) to educational performance category.
     """
     try:
         val = float(grade)
